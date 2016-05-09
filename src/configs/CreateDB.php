@@ -1,31 +1,39 @@
+
 <?php
 $servername = ini_get("mysql.default_host");
 $username = ini_get("mysql.default_user");
 $password =  ini_get("mysql.default_password");
 
-//$link = mysqli_connect($servername,'root',$password);
-$link = mysqli_connect('localhost','root','yes');
-if (!$link) {
-    die('Could not connect: ' . mysqli_connect_error());
+//$mysqli = new mysqli($servername,'root',$password);
+
+$mysqli = new mysqli('localhost','root','');
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
-mysqli_query($link,'DROP DATABASE IF EXISTS HW5');
-$sql = 'CREATE DATABASE HW5';
-if (mysqli_query($link,$sql)) {
+
+/* Non-prepared statement */
+if ($mysqli->query("DROP DATABASE IF EXISTS HW5") && $mysqli->query("CREATE DATABASE HW5")) {
     echo "Database HW5 created successfully\n";
-    $db_selected=mysqli_select_db($link,'HW5');
-    $sql='CREATE TABLE user(
+    
+$db_selected=$mysqli->select_db("HW5");
+if($db_selected){
+    echo "true";
+}
+$sql = "CREATE TABLE user(
      user_id int(5) NOT NULL AUTO_INCREMENT,
      user_email VARCHAR(50),
      BALANCE FLOAT(50),
      PRIMARY KEY(user_id)
-     )';
-	if(mysqli_query($link,$sql)){
+     )";
+    if($db_selected){
 		echo "Table PATRON created successfully\n";
 	} else {
-	    echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
+	    echo "ERROR: Could not able to execute $sql. " . $mysqli->connect_error;
 	}
-} else {
-    echo "Error creating database: " . mysqli_connect_error() . "\n";
+}else {
+    echo "Error creating database: " . $mysqli->connect_error. "\n";
 }
 	
-mysqli_close($link);
+$mysqli->close();
+
+

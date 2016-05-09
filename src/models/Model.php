@@ -10,10 +10,10 @@ class Model
         $username = ini_get("mysql.default_user");
         $password =  ini_get("mysql.default_password");
         echo $password;
-        $this->link = mysqli_connect($servername,'root','yes');
+        $this->link = new mysqli($servername,'root','yes');
 		if (!$this->link) {
-		    die('Could not connect: ' . mysqli_connect_error());
+		    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 		}
-        mysqli_select_db($this->link,"HW5");
+        $mysqli->select_db("HW5");
     }
 }
